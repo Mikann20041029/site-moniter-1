@@ -1,6 +1,6 @@
 {
   "site_title": "Site Change Monitor (Lite)",
-  "target_url": "https://example.com",
+  "target_url": "https://www.youtube.com/",
   "user_agent": "SiteChangeMonitorLite/1.0 (+https://github.com/)",
   "max_text_chars": 20000
 }
