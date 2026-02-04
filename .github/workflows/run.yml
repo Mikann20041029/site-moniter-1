@@ -1,1 +1,40 @@
+name: Run Site Change Monitor (Lite)
 
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+
+      - name: Selftest
+        run: python main.py --selftest
+
+      - name: Generate report
+        run: python main.py
+
+      - name: Commit & push output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Only stage what this tool generates
+          git add index.html sitemap.xml robots.txt assets data/state.json
+
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update monitor report [skip ci]"
+          git push
